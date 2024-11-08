@@ -1,5 +1,5 @@
 from utils.get_box import get_box
-from cache.client import Client
+from tmquery.client import Client
 from utils.list_to_csv import list_to_csv
 
 class ClubData:
@@ -35,7 +35,6 @@ class ClubInstance:
     def _scrape(self, season: str = None):
 
         url = "https://www.transfermarkt.com" + self.id + ("?saison_id=" + season if season is not None else "")
-        print(url)
 
         soup = Client().scrape(url)
         squadBox = get_box(soup, "squad")

@@ -1,7 +1,7 @@
 from spiders.search import search
 from query.tables import ClubTable, PlayerTable, CompetitionTable
 from utils.singleton import Singleton
-from cache.client import Client
+from tmquery.client import Client
 
 
 class TMQuery(metaclass=Singleton):

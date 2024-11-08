@@ -1,7 +1,7 @@
 from typing import List
 from bs4 import BeautifulSoup
 from utils.get_box import get_box
-from cache.client import Client
+from tmquery.client import Client
 
 
 def valid_td(td: BeautifulSoup) -> str:

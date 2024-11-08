@@ -1,5 +1,5 @@
 from typing import List
-from cache.client import Client 
+from tmquery.client import Client 
 from utils.get_box import get_box
 from utils.list_to_csv import list_to_csv
 
