@@ -9,16 +9,25 @@ class PlayerTable():
 
     def __init__(self, ids: List[str]):
         self._data = [PlayerInstance(id) for id in ids]
-        print("table created", ids)
+        # print("table created", ids)
+
 
     def clubs() -> 'ClubTable':
         return ClubTable()
     
-    def data(self) -> 'List[PlayerData]':
+
+    def data(self, season: str = None) -> 'List[PlayerData]':
         return [player.get_data() for player in self._data]
+    
+
+    def csv(self, season: str = None) -> str:
+        tmp_data = "\n".join([str(x) for x in self.data(season)])
+        return PlayerData.csv_header() + "\n" + tmp_data
+
 
     def count(self) -> int:
         return len(self._data)
+
 
 
 class ClubTable():
@@ -26,7 +35,7 @@ class ClubTable():
 
     def __init__(self, ids: List[str]):
         self._data = [ClubInstance(id) for id in ids]
-        print("table created", ids)
+        # print("table created", ids)
     
 
     def players(self, season: str = None) -> 'PlayerTable':
@@ -38,8 +47,14 @@ class ClubTable():
         return [club.get_data(season) for club in self._data]
 
 
+    def csv(self, season: str = None) -> str:
+        tmp_data = "\n".join([str(x) for x in self.data(season)])
+        return ClubData.csv_header() + "\n" + tmp_data
+
+
     def count(self) -> int:
         return len(self._data)
+
 
 
 class CompetitionTable():
@@ -47,11 +62,16 @@ class CompetitionTable():
 
     def __init__(self, ids: List[str]):
         self._data = [CompetitionInstance(id) for id in ids]
-        print("table created", ids)
+        # print("table created", ids)
     
 
     def data(self, season: str = None) -> 'List[CompetitionData]':
         return [competition.get_data(season) for competition in self._data]
+    
+
+    def csv(self, season: str = None) -> str:
+        tmp_data = "\n".join([str(x) for x in self.data(season)])
+        return CompetitionData.csv_header() + "\n" + tmp_data
     
 
     def get_clubs(self, season: str = None) -> 'PlayerTable':

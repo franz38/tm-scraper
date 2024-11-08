@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from cache.client import Client
 from utils.get_box import get_box
 from typing import List, Optional
-
+from utils.list_to_csv import list_to_csv
 
 class PlayerData:
     def __init__(self,
@@ -36,6 +36,18 @@ class PlayerData:
         self.option = option
         self.outfitter = outfitter
 
+    def __str__(self):
+        return list_to_csv([self.name, self.date_of_birth, self.place_of_birth, self.height, 
+                            self.citizenship, self.position, self.foot, self.agent,
+                            self.current_club, self.joined, self.expires, self.option, self.outfitter])
+
+    
+    def csv_header():
+        return list_to_csv(["name", "date_of_birth", "place_of_birth", 
+                            "height", "citizenship", "position", "foot",
+                            "agent", "current_club", "joined", "expires", 
+                            "option", "outfitter"])
+
 
 class PlayerInstance:
     id: str
@@ -57,7 +69,8 @@ class PlayerInstance:
 
     def _scrape_player_data(self, soup: BeautifulSoup, player: PlayerData) -> 'PlayerData':
         
-        soup.find(class_="data-header__headline-wrapper").find(class_="data-header__shirt-number").clear()
+        if soup.find(class_="data-header__headline-wrapper").find(class_="data-header__shirt-number"):
+            soup.find(class_="data-header__headline-wrapper").find(class_="data-header__shirt-number").clear()
         player.name = soup.find(class_="data-header__headline-wrapper").get_text().strip()
 
         data_box = get_box(soup, "player data")
@@ -82,7 +95,8 @@ class PlayerInstance:
             elif "agent" in key:
                 player.agent = values[i].find("a")["href"].strip() if values[i].find("a") else text
             elif "club" in key:
-                player.current_club = values[i].find("a")["href"]
+                if values[i].find("a"):
+                    player.current_club = values[i].find("a")["href"]
             elif "joined" in key:
                 player.joined = text
             elif "expires" in key:

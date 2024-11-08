@@ -1,6 +1,6 @@
 from utils.get_box import get_box
 from cache.client import Client
-
+from utils.list_to_csv import list_to_csv
 
 class ClubData:
     def __init__(self, id:str, name: str, squad_size: int, avg_age: float, foreigners: int, nt_players: int, stadium: str, current_tr: str, players: list[str]):
@@ -14,6 +14,15 @@ class ClubData:
         self.current_tr = current_tr
         self.players = players
     
+    def __str__(self):
+        return list_to_csv([self.name, self.squad_size, self.avg_age, self.foreigners,
+                            self.nt_players, self.stadium, self.current_tr])
+
+    def csv_header():
+        return list_to_csv(["name", "squad_size", "avg_age", "foreigners", 
+                            "nt_players", "stadium", "current_tr"])
+
+
 class ClubInstance:
     id: str
     _data: ClubData
@@ -26,6 +35,7 @@ class ClubInstance:
     def _scrape(self, season: str = None):
 
         url = "https://www.transfermarkt.com" + self.id + ("?saison_id=" + season if season is not None else "")
+        print(url)
 
         soup = Client().scrape(url)
         squadBox = get_box(soup, "squad")
@@ -48,12 +58,16 @@ class ClubInstance:
                               players=players
                             )
         
-        print("player scraped: " + url)
+        if soup.find(class_="data-header__headline-wrapper").find(class_="data-header__shirt-number"):
+            soup.find(class_="data-header__headline-wrapper").find(class_="data-header__shirt-number").clear()
+        self._data.name = soup.find(class_="data-header__headline-wrapper").get_text().strip()
+
+        print("club scraped: " + url)
 
     
 
     def get_data(self, season: str = None) -> ClubData:
         if not self._data:
-            self._scrape()
+            self._scrape(season)
         return self._data
 
