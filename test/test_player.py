@@ -3,7 +3,7 @@ from tmquery.query.query import TMQuery
 
 def test_get_data():
     
-    player_data = TMQuery(cache_results=True).search_player("dybala").get_data()[0]
+    player_data = TMQuery(cache_results=True).search_player("dybala").data()[0]
     
     assert player_data.name == "Paulo Dybala"
     assert player_data.date_of_birth == "Nov 15, 1993 (30)"

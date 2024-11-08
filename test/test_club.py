@@ -3,7 +3,7 @@ from tmquery.query.query import TMQuery
 
 def test_get_data():
 
-    club_data = TMQuery(cache_results=True).search_club("benfica").get_data()[0]
+    club_data = TMQuery(cache_results=True).search_club("benfica").data()[0]
 
     assert club_data.squad_size == 26
     assert club_data.avg_age == 25.2
@@ -15,6 +15,6 @@ def test_get_data():
 
 def test_get_players():
 
-    players_data = TMQuery(cache_results=True).search_club("benfica").players().get_data()
+    players_data = TMQuery(cache_results=True).search_club("benfica").players().data()
     
     assert players_data[0].place_of_birth == "Donetsk"
