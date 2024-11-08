@@ -12,4 +12,4 @@ def test_search():
     assert data.id == "/inter-mailand/startseite/verein/46"
 
     data = TMQuery(cache_results=True).search_competition("ligue 1").get_data()[0]
-    assert data.id == "ligue-1/startseite/wettbewerb/FR1"
+    assert data.id == "/ligue-1/startseite/wettbewerb/FR1"
