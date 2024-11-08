@@ -1,6 +1,6 @@
 from typing import List
 from spiders.club import ClubData, ClubInstance
-from spiders.player import PlayerData, PlayerInstance
+from spiders.player import PlayerData, PlayerInstance, MarketValue, Transfer
 from spiders.competition import CompetitionData, CompetitionInstance
 
 
@@ -16,13 +16,31 @@ class PlayerTable():
         return ClubTable()
     
 
+    def market_value(self) -> 'List[MarketValue]':
+        return [value for player in self._data for value in player.get_market_value()]
+    
+
+    def market_value_csv(self) -> str:
+        tmp_data = "\n".join(str(x) for x in self.market_value())
+        return MarketValue.csv_header() + "\n" + tmp_data
+
+
     def data(self, season: str = None) -> 'List[PlayerData]':
         return [player.get_data() for player in self._data]
     
 
-    def csv(self, season: str = None) -> str:
-        tmp_data = "\n".join([str(x) for x in self.data(season)])
-        return PlayerData.csv_header() + "\n" + tmp_data
+    def data_csv(self, season: str = None) -> str:
+        tmp = "\n".join([str(x) for x in self.data(season)])
+        return PlayerData.csv_header() + "\n" + tmp
+    
+    
+    def transfers(self) -> 'List[Transfer]':
+        return [value for player in self._data for value in player.get_transfers()]
+
+
+    def transfers_csv(self) -> str:
+        tmp = "\n".join([str(x) for x in self.transfers()])
+        return Transfer.csv_header() + "\n" + tmp
 
 
     def count(self) -> int:
@@ -38,7 +56,7 @@ class ClubTable():
         # print("table created", ids)
     
 
-    def players(self, season: str = None) -> 'PlayerTable':
+    def get_players(self, season: str = None) -> 'PlayerTable':
         player_ids = [player_id for club in self._data for player_id in club.get_data(season).players]
         return PlayerTable(player_ids)
 

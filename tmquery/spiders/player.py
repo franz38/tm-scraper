@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from cache.client import Client
+from tmquery.client import Client
 from utils.get_box import get_box
 from typing import List, Optional
 from utils.list_to_csv import list_to_csv
@@ -49,14 +49,59 @@ class PlayerData:
                             "option", "outfitter"])
 
 
+class MarketValue:
+
+    def __init__(self, player_id: str, player_name: str, mv: str, date: str, club: str, age: str):
+        self.player_id = player_id
+        self.player_name = player_name
+        self.mv = mv
+        self.date = date
+        self.club = club
+        self.age = age
+
+    def __str__(self):
+        return list_to_csv([self.player_name, self.mv, self.date, 
+                            self.club, self.age, self.player_id])
+
+    def csv_header():
+        return list_to_csv(["name", "mv", "date", 
+                            "club", "age", "id"])
+
+
+class Transfer:
+
+    def __init__(self, player_name: str, season: str, date: str, left: str, joined: str, mv: str, fee: str, player_id: str):
+        self.season = season
+        self.date = date
+        self.left = left
+        self.joined = joined
+        self.mv = mv
+        self.fee = fee
+        self.player_name = player_name
+        self.player_id = player_id
+    
+    def __str__(self):
+        return list_to_csv([self.player_name, self.season, self.date, self.left, 
+                            self.joined, self.mv, self.fee, self.player_id])
+
+    def csv_header():
+        return list_to_csv(["player", "season", "date", "left", 
+                            "joined", "mv", "fee", "player_id"])
+
+
+
 class PlayerInstance:
     id: str
     _data: PlayerData
+    _mv: List[MarketValue]
+    _transfers: List[Transfer]
 
 
     def __init__(self, id: str):
         self.id = id
         self._data = None
+        self._mv = []
+        self._transfers = []
     
 
     def _scrape(self):
@@ -64,6 +109,8 @@ class PlayerInstance:
         soup = Client().scrape(url)
 
         self._data = self._scrape_player_data(soup, PlayerData(id=self.id))
+        self._scrape_mv()
+        self._scrape_transfers()
         print("player scraped: " + url)
     
 
@@ -109,7 +156,51 @@ class PlayerInstance:
         return player
 
 
+    def _scrape_mv(self):
+
+        number_id = self.id.split("/").pop()
+        url = "https://www.transfermarkt.com/ceapi/marketValueDevelopment/graph/" + number_id
+        r = Client().fetch(url)
+
+        mvalues: List[MarketValue] = []
+        for val in r["list"]:
+            mvalues.append(MarketValue(player_id=self.id, player_name=self._data.name,
+                                       age=val["age"], club=val["verein"], 
+                                       date=val["datum_mw"], mv=val["mw"]))
+        self._mv = mvalues
+
+
+    def _scrape_transfers(self):
+
+        number_id = self.id.split("/").pop()
+        url = "https://www.transfermarkt.com/ceapi/transferHistory/list/" + number_id
+        r = Client().fetch(url)
+
+        for val in r["transfers"]:
+            tr = Transfer(
+                season=val["season"],
+                date=val["date"],
+                fee=val["fee"],
+                mv=val["marketValue"],
+                joined=val["to"]["clubName"],
+                left=val["from"]["clubName"],
+                player_id=self.id,
+                player_name=self._data.name
+            )
+            self._transfers.append(tr)
+        
+
     def get_data(self) -> PlayerData:
         if not self._data:
             self._scrape()
         return self._data
+
+    def get_market_value(self) -> List[MarketValue]:
+        if not self._mv:
+            self._scrape()
+        return self._mv
+    
+    def get_transfers(self) -> List[Transfer]:
+        if not self._transfers:
+            self._scrape()
+        return self._transfers
