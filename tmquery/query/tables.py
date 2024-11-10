@@ -65,7 +65,7 @@ class ClubTable():
         return [club.get_data(season) for club in self._data]
 
 
-    def csv(self, season: str = None) -> str:
+    def data_csv(self, season: str = None) -> str:
         tmp_data = "\n".join([str(x) for x in self.data(season)])
         return ClubData.csv_header() + "\n" + tmp_data
 
@@ -87,7 +87,7 @@ class CompetitionTable():
         return [competition.get_data(season) for competition in self._data]
     
 
-    def csv(self, season: str = None) -> str:
+    def data_csv(self, season: str = None) -> str:
         tmp_data = "\n".join([str(x) for x in self.data(season)])
         return CompetitionData.csv_header() + "\n" + tmp_data
     
