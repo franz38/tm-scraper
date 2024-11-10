@@ -8,6 +8,7 @@ def test_get_data():
     assert competition_data.name == "Premier League"
     assert competition_data.id == "/premier-league/startseite/wettbewerb/GB1"
 
+
 def test_get_clubs():
 
     clubs = TMQuery(cache_results=True).search_competition("premier league").get_clubs().data()
@@ -22,6 +23,7 @@ def test_get_previous_clubs():
 
     assert clubs[0].id == "/manchester-city/startseite/verein/281/saison_id/2017"
     assert clubs[1].id == "/fc-chelsea/startseite/verein/631/saison_id/2017"
+
 
 def test_csv():
 

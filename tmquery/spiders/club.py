@@ -1,6 +1,7 @@
 from utils.get_box import get_box
 from tmquery.client import Client
 from utils.list_to_csv import list_to_csv
+from utils.strings import remove_season
 
 class ClubData:
     def __init__(self, id:str, name: str, squad_size: int, avg_age: float, foreigners: int, nt_players: int, stadium: str, current_tr: str, players: list[str]):
@@ -34,7 +35,12 @@ class ClubInstance:
 
     def _scrape(self, season: str = None):
 
-        url = "https://www.transfermarkt.com" + self.id + ("?saison_id=" + season if season is not None else "")
+        _id = self.id
+        if season:
+            _id = remove_season(_id)
+
+        print(_id)
+        url = "https://www.transfermarkt.com" + _id + ("?saison_id=" + season if season is not None else "")
 
         soup = Client().scrape(url)
         squadBox = get_box(soup, "squad")
@@ -46,7 +52,7 @@ class ClubInstance:
             
         info = soup.find_all(class_="data-header__content")
         
-        self._data = ClubData(id=self.id,
+        self._data = ClubData(id=_id,
                               name="", 
                               squad_size= int(info[3].get_text().strip()), 
                               avg_age=float(info[4].get_text().strip()),

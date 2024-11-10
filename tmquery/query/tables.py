@@ -92,6 +92,6 @@ class CompetitionTable():
         return CompetitionData.csv_header() + "\n" + tmp_data
     
 
-    def get_clubs(self, season: str = None) -> 'PlayerTable':
+    def get_clubs(self, season: str = None) -> 'ClubTable':
         club_ids = [club_id for club in self._data for club_id in club.get_data(season).clubs]
         return ClubTable(club_ids)
