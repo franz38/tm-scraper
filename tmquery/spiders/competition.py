@@ -1,7 +1,7 @@
 from typing import List
 from tmquery.client import Client 
-from utils.get_box import get_box
-from utils.list_to_csv import list_to_csv
+from tmquery.utils import list_to_csv, get_box
+
 
 class CompetitionData:
     def __init__(self, id: str, name: str=None, 

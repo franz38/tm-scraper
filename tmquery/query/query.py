@@ -1,6 +1,6 @@
-from spiders.search import search
-from query.tables import ClubTable, PlayerTable, CompetitionTable
-from utils.singleton import Singleton
+from tmquery.spiders import search
+from tmquery.query.tables import ClubTable, PlayerTable, CompetitionTable
+from tmquery.utils import Singleton
 from tmquery.client import Client
 
 

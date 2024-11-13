@@ -1,6 +1,6 @@
 from typing import List
 from bs4 import BeautifulSoup
-from utils.get_box import get_box
+from tmquery.utils import get_box
 from tmquery.client import Client
 
 

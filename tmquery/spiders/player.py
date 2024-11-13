@@ -1,8 +1,8 @@
 from bs4 import BeautifulSoup
-from tmquery.client import Client
-from utils.get_box import get_box
 from typing import List, Optional
-from utils.list_to_csv import list_to_csv
+from tmquery.client import Client
+from tmquery.utils import list_to_csv, get_box
+
 
 class PlayerData:
     def __init__(self,

@@ -1,7 +1,5 @@
 from typing import List
-from spiders.club import ClubData, ClubInstance
-from spiders.player import PlayerData, PlayerInstance, MarketValue, Transfer
-from spiders.competition import CompetitionData, CompetitionInstance
+from tmquery.spiders import ClubData, ClubInstance, PlayerData, PlayerInstance, CompetitionData, CompetitionInstance, MarketValue, Transfer
 
 
 class PlayerTable():
