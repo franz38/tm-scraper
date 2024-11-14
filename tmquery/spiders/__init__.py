@@ -1,4 +1,10 @@
-from .club import ClubData, ClubInstance
-from .competition import CompetitionData, CompetitionInstance, GoalScorer
-from .player import PlayerData, PlayerInstance, MarketValue, Transfer, CareerStats
-from .search import search
+from .club import ClubData, ClubInstance  # noqa: F401
+from .competition import CompetitionData, CompetitionInstance, GoalScorer  # noqa: F401
+from .player import (
+    PlayerData,
+    PlayerInstance,
+    MarketValueDTO,
+    TransferDTO,
+    CareerStatsDTO,
+)  # noqa: F401
+from .search import search  # noqa: F401

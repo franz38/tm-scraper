@@ -1,7 +1,7 @@
 from tmquery.utils import list_to_csv
 
 
-class Transfer:
+class TransferDTO:
     def __init__(
         self,
         player_name: str,

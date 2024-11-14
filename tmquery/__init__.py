@@ -1,1 +1,1 @@
-from .query.query import TMQuery
+from .query.query import TMQuery  # noqa: F401
