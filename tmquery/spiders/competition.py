@@ -25,9 +25,22 @@ class CompetitionData:
     def __str__(self):
         return list_to_csv([self.name, self.number_of_teams, self.number_of_players, self.foreigners, self.avg_mv, self.avg_age, self.mvp])
 
-    
     def csv_header():
         return list_to_csv(["name", "number_of_teams", "number_of_players", "foreigners", "avg_mv", "avg_age", "mvp"])
+
+
+class GoalScorer():
+    def __init__(self, id: str, name: str, appearances: int, goals: int):
+        self.id = id
+        self.name = name
+        self.appearances = appearances
+        self.goals = goals
+    
+    def __str__(self):
+        return list_to_csv([self.name, self.appearances, self.goals, self.id])
+
+    def csv_header():
+        return list_to_csv(["name", "appearances", "goals", "player_id"])
 
 
 class CompetitionInstance:
@@ -74,7 +87,32 @@ class CompetitionInstance:
         self._data = cp
     
 
+    def _scrape_goal_scorers(self, season: str = None) -> List[GoalScorer]:
+        short_name, tier = self.id.split("/startseite/wettbewerb/")
+        season_param = ("/saison_id/" + season) if season else ""
+        url = "https://www.transfermarkt.com" + short_name + "/torschuetzenliste/wettbewerb/" + tier + season_param
+        soup = Client().scrape(url)
+
+        rows = get_box(soup, "goalscorers").find("table", class_="items").find("tbody").find_all("tr", recursive=False)
+        res: List[GoalScorer] = []
+        for row in rows:
+            tds = row.find_all("td", recursive=False)
+
+            gs = GoalScorer(
+                id= tds[1].find(class_="hauptlink").find("a")["href"],
+                name= tds[1].find(class_="hauptlink").find("a").get_text().strip(),
+                appearances= int(tds[5].find("a").get_text().strip()),
+                goals= int(tds[6].find("a").get_text().strip())
+            )
+            res.append(gs)
+
+        return res
+
+
     def get_data(self, season: str = None) -> CompetitionData:
         if not self._data:
             self._scrape(season)
         return self._data
+    
+    def get_goal_scorers(self, season: str = None) -> List[GoalScorer]:
+        return self._scrape_goal_scorers(season)

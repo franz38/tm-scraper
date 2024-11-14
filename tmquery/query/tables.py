@@ -1,5 +1,5 @@
 from typing import List
-from tmquery.spiders import ClubData, ClubInstance, PlayerData, PlayerInstance, CompetitionData, CompetitionInstance, MarketValue, Transfer
+from tmquery.spiders import ClubData, ClubInstance, PlayerData, PlayerInstance, CompetitionData, CompetitionInstance, MarketValue, Transfer, GoalScorer
 
 
 class PlayerTable():
@@ -93,3 +93,15 @@ class CompetitionTable():
     def get_clubs(self, season: str = None) -> 'ClubTable':
         club_ids = [club_id for club in self._data for club_id in club.get_data(season).clubs]
         return ClubTable(club_ids)
+
+
+    def goal_scorers(self, season: str = None):
+        return [gs for competition in self._data for gs in competition.get_goal_scorers(season)]
+
+
+    def goal_scorers_csv(self, season: str = None):
+        tmp_data = "\n".join([str(x) for x in self.goal_scorers(season)])
+        return GoalScorer.csv_header() + "\n" + tmp_data
+
+# class MatchTable():
+#     pass
