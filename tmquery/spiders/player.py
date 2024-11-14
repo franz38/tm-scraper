@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from typing import List, Optional
 from tmquery.client import Client
+from tmquery.dto import Transfer, MarketValue, CareerStats, Injury
 from tmquery.utils import list_to_csv, get_box
 
 
@@ -49,77 +50,6 @@ class PlayerData:
                             "option", "outfitter"])
 
 
-class MarketValue:
-
-    def __init__(self, player_id: str, player_name: str, mv: str, date: str, club: str, age: str):
-        self.player_id = player_id
-        self.player_name = player_name
-        self.mv = mv
-        self.date = date
-        self.club = club
-        self.age = age
-
-    def __str__(self):
-        return list_to_csv([self.player_name, self.player_id, self.mv, 
-                            self.date, self.club, self.age])
-
-    def csv_header():
-        return list_to_csv(["player_name", "player_id",  "mv", 
-                            "date", "club", "age"])
-
-
-class Transfer:
-
-    def __init__(self, player_name: str, season: str, date: str, left: str, joined: str, mv: str, fee: str, player_id: str):
-        self.season = season
-        self.date = date
-        self.left = left
-        self.joined = joined
-        self.mv = mv
-        self.fee = fee
-        self.player_name = player_name
-        self.player_id = player_id
-    
-    def __str__(self):
-        return list_to_csv([self.player_name, self.player_id, self.season, self.date, self.left, 
-                            self.joined, self.mv, self.fee])
-
-    def csv_header():
-        return list_to_csv(["player", "player_id", "season", "date", "left", 
-                            "joined", "mv", "fee"])
-
-
-class CareerStats:
-    
-    def __init__(self, player_id: str, competition: Optional[str] = None, competition_id: Optional[str] = None, appearences: Optional[int] = None, goals: Optional[int] = None, assists: Optional[int] = None, og: Optional[int] = None,
-                 sub_on: Optional[int] = None, sub_off: Optional[int] = None, yellow_cards: Optional[int] = None, double_yellow: Optional[int] = None, red_cards: Optional[int] = None, penalty_goals: Optional[int] = None,
-                 minutes_per_goal: Optional[str] = None, minutes_played: Optional[str] = None):
-        self.player_id = player_id
-        self.competition = competition
-        self.competition_id = competition_id
-        self.appearences = appearences
-        self.goals = goals
-        self.assists = assists
-        self.og = og
-        self.sub_on = sub_on
-        self.sub_off = sub_off
-        self.yellow_cards = yellow_cards
-        self.double_yellow = double_yellow
-        self.red_cards = red_cards
-        self.penalty_goals = penalty_goals
-        self.minutes_per_goal = minutes_per_goal
-        self.minutes_played = minutes_played
-    
-    def __str__(self):
-        return list_to_csv([self.player_id, self.competition, self.competition_id, self.appearences, self.goals, self.assists, 
-                    self.og, self.sub_on, self.sub_off, self.yellow_cards, self.double_yellow, 
-                    self.red_cards, self.penalty_goals, self.minutes_per_goal, self.minutes_played])
-
-    def csv_header():
-        return list_to_csv(["player_id", "competition", "competition_id", "appearences", "goals", "assists", 
-         "og", "sub_on", "sub_off", "yellow_cards", "double_yellow", "red_cards", 
-         "penalty_goals", "minutes_per_goal", "minutes_played"])
-
 
 class PlayerInstance:
     id: str
@@ -127,6 +57,7 @@ class PlayerInstance:
     _mv: List[MarketValue]
     _transfers: List[Transfer]
     _career_stats: List[CareerStats]
+    _injuries: List[Injury]
 
 
     def __init__(self, id: str):
@@ -135,6 +66,7 @@ class PlayerInstance:
         self._mv = []
         self._transfers = []
         self._career_stats = []
+        self._injuries = []
     
 
     def _scrape(self):
@@ -221,11 +153,29 @@ class PlayerInstance:
             )
             self._transfers.append(tr)
         
+    def _scrape_injuries(self):
+        _id = self.id.split("/profil/spieler/")
+        url = "https://www.transfermarkt.com" + _id[0] + "/verletzungen/spieler/" + _id[1] + "/plus/1"
+        soup = Client().scrape(url)
+        rows = get_box(soup, "injury history").find("table", class_="items").find("tbody").find_all("tr")
+
+        injuries: List[Injury] = []
+        for row in rows:
+            tds = row.find_all("td")
+            injury = Injury(
+                season= tds[0].get_text().strip(),
+                injury= tds[1].get_text().strip(),
+                from_= tds[2].get_text().strip(),
+                until= tds[3].get_text().strip(),
+                days= tds[4].get_text().strip(),
+                games_missed= ""
+            )
+            injuries.append(injury)
+        self._injuries = injuries
+
 
     def _scrape_career_stats(self):
-        print(self.id)
         _id = self.id.split("/profil/spieler/")
-        print(_id)
         url = "https://www.transfermarkt.com" + _id[0] + "/leistungsdaten/spieler/" + _id[1] + "/plus/1?saison=ges"
         soup = Client().scrape(url)
         rows = get_box(soup, "career stats").find("table", class_="items").find("tbody").find_all("tr")
@@ -280,3 +230,8 @@ class PlayerInstance:
         if not self._career_stats:
             self._scrape_career_stats()
         return self._career_stats
+    
+    def get_injuries(self) -> List[Injury]:
+        if not self._injuries:
+            self._scrape_injuries()
+        return self._injuries

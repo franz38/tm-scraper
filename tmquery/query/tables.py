@@ -1,4 +1,5 @@
 from typing import List
+from tmquery.dto.injury import Injury
 from tmquery.spiders import ClubData, ClubInstance, PlayerData, PlayerInstance, CompetitionData, CompetitionInstance, MarketValue, Transfer, GoalScorer, CareerStats
 
 
@@ -54,6 +55,13 @@ class PlayerTable():
         return CareerStats.csv_header() + "\n" + tmp
 
 
+    def injuries(self) -> List[Injury]:
+        return [value for player in self._data for value in player.get_injuries()]
+
+
+    def injuries_csv(self) -> str:
+        tmp = "\n".join([str(x) for x in self.injuries()])
+        return Injury.csv_header() + "\n" + tmp
 
 
 class ClubTable():
