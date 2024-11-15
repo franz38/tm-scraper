@@ -12,6 +12,8 @@ class TransferDTO:
         mv: str,
         fee: str,
         player_id: str,
+        left_id: str,
+        joined_id: str,
     ):
         self.season = season
         self.date = date
@@ -21,6 +23,8 @@ class TransferDTO:
         self.fee = fee
         self.player_name = player_name
         self.player_id = player_id
+        self.left_id = left_id
+        self.joined_id = joined_id
 
     def __str__(self):
         return list_to_csv(

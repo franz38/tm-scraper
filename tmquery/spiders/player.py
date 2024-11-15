@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from typing import List, Optional
 from tmquery.client import Client
 from tmquery.dto import TransferDTO, MarketValueDTO, CareerStatsDTO, InjuryDTO
-from tmquery.utils import list_to_csv, get_box
+from tmquery.utils import get_club, list_to_csv, get_box
 
 
 class PlayerData:
@@ -192,10 +192,12 @@ class PlayerInstance:
                 date=val["date"],
                 fee=val["fee"],
                 mv=val["marketValue"],
-                joined=val["to"]["clubName"],
-                left=val["from"]["clubName"],
+                joined= val["to"]["clubName"],
+                left= val["from"]["clubName"],
                 player_id=self.id,
                 player_name=self._data.name,
+                joined_id= val["to"]["href"],
+                left_id= val["from"]["href"],
             )
             self._transfers.append(tr)
 
@@ -301,3 +303,8 @@ class PlayerInstance:
         if not self._injuries:
             self._scrape_injuries()
         return self._injuries
+    
+    def get_club(self, season: str = None) -> str:
+        self.get_transfers()
+        club_id = get_club(self._transfers, season).replace("transfers", "startseite")
+        return club_id

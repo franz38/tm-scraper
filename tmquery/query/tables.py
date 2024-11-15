@@ -19,10 +19,10 @@ class PlayerTable:
 
     def __init__(self, ids: List[str]):
         self._data = [PlayerInstance(id) for id in ids]
-        # print("table created", ids)
 
-    def clubs() -> "ClubTable":
-        return ClubTable()
+    def get_club(self, season: str = None) -> "ClubTable":
+        ids = [x.get_club(season) for x in self._data]
+        return ClubTable(ids)
 
     def market_value(self) -> "List[MarketValueDTO]":
         return [value for player in self._data for value in player.get_market_value()]
