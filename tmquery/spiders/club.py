@@ -43,7 +43,7 @@ class ClubInstance:
         if season:
             _id = remove_season(_id)
 
-        url = "https://www.transfermarkt.com" + _id + ("?saison_id=" + season if season is not None else "")
+        url = _id + ("?saison_id=" + season if season is not None else "")
 
         soup = Client().scrape(url)
         squadBox = get_box(soup, "squad")

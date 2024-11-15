@@ -94,7 +94,7 @@ class PlayerInstance:
         self._injuries = []
 
     def _scrape(self):
-        url = "https://www.transfermarkt.com" + self.id
+        url = self.id
         soup = Client().scrape(url)
 
         self._data = self._scrape_player_data(soup, PlayerData(id=self.id))
@@ -162,7 +162,7 @@ class PlayerInstance:
     def _scrape_mv(self):
         number_id = self.id.split("/").pop()
         url = (
-            "https://www.transfermarkt.com/ceapi/marketValueDevelopment/graph/"
+            "/ceapi/marketValueDevelopment/graph/"
             + number_id
         )
         r = Client().fetch(url)
@@ -183,7 +183,7 @@ class PlayerInstance:
 
     def _scrape_transfers(self):
         number_id = self.id.split("/").pop()
-        url = "https://www.transfermarkt.com/ceapi/transferHistory/list/" + number_id
+        url = "/ceapi/transferHistory/list/" + number_id
         r = Client().fetch(url)
 
         for val in r["transfers"]:
@@ -204,8 +204,7 @@ class PlayerInstance:
     def _scrape_injuries(self):
         _id = self.id.split("/profil/spieler/")
         url = (
-            "https://www.transfermarkt.com"
-            + _id[0]
+            _id[0]
             + "/verletzungen/spieler/"
             + _id[1]
             + "/plus/1"
@@ -235,8 +234,7 @@ class PlayerInstance:
     def _scrape_career_stats(self):
         _id = self.id.split("/profil/spieler/")
         url = (
-            "https://www.transfermarkt.com"
-            + _id[0]
+            _id[0]
             + "/leistungsdaten/spieler/"
             + _id[1]
             + "/plus/1?saison=ges"

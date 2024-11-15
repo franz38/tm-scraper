@@ -4,7 +4,7 @@ import os
 from bs4 import BeautifulSoup
 from tmquery.utils.singleton import Singleton
 
-
+base_url = "https://www.transfermarkt.com"
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
 features = "html.parser"
 
@@ -25,7 +25,7 @@ class Client(metaclass=Singleton):
 
         if self.cache_results:
             if not os.path.isfile(filename):
-                html_page: str = requests.get(url, headers=headers).text
+                html_page: str = requests.get(base_url + url, headers=headers).text
                 os.makedirs(os.path.dirname(filename), exist_ok=True)
                 with open(filename, "w") as file:
                     file.write(html_page)
@@ -33,7 +33,7 @@ class Client(metaclass=Singleton):
             with open(filename, "r") as file:
                 data = file.read()
         else:
-            data = requests.get(url, headers=headers).text
+            data = requests.get(base_url + url, headers=headers).text
         
         return data
     

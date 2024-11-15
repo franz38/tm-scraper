@@ -54,7 +54,7 @@ class CompetitionInstance:
 
 
     def _scrape(self, season: str = None):
-        url = "https://www.transfermarkt.com" + self.id + ("?saison_id=" + season if season else "")
+        url = self.id + ("?saison_id=" + season if season else "")
         soup = Client().scrape(url)
 
         rows = get_box(soup, "clubs").find("tbody").find_all("tr")
@@ -90,7 +90,7 @@ class CompetitionInstance:
     def _scrape_goal_scorers(self, season: str = None) -> List[GoalScorer]:
         short_name, tier = self.id.split("/startseite/wettbewerb/")
         season_param = ("/saison_id/" + season) if season else ""
-        url = "https://www.transfermarkt.com" + short_name + "/torschuetzenliste/wettbewerb/" + tier + season_param
+        url = short_name + "/torschuetzenliste/wettbewerb/" + tier + season_param
         soup = Client().scrape(url)
 
         rows = get_box(soup, "goalscorers").find("table", class_="items").find("tbody").find_all("tr", recursive=False)

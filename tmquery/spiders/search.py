@@ -14,7 +14,7 @@ def valid_td(td: BeautifulSoup) -> str:
 
 def search(query: str, header: str) -> List[str]:
     
-    url = "https://www.transfermarkt.com/schnellsuche/ergebnis/schnellsuche?query=" + query
+    url = "/schnellsuche/ergebnis/schnellsuche?query=" + query
     soup = Client().scrape(url)
 
     box = get_box(soup, header)
