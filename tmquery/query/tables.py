@@ -20,47 +20,31 @@ class PlayerTable:
     def __init__(self, ids: List[str]):
         self._data = [PlayerInstance(id) for id in ids]
 
-    def get_club(self, season: str = None) -> "ClubTable":
-        ids = [x.get_club(season) for x in self._data]
-        return ClubTable(ids)
-
-    def market_value(self) -> "List[MarketValueDTO]":
-        return [value for player in self._data for value in player.get_market_value()]
-
-    def market_value_csv(self) -> str:
-        tmp_data = "\n".join(str(x) for x in self.market_value())
-        return MarketValueDTO.csv_header() + "\n" + tmp_data
-
-    def data(self, season: str = None) -> "List[PlayerData]":
+    def data(self, season: str = None) -> 'List[PlayerData]':
         return [player.get_data() for player in self._data]
 
-    def data_csv(self, season: str = None) -> str:
+    def csv(self, season: str = None) -> str:
         tmp = "\n".join([str(x) for x in self.data(season)])
         return PlayerData.csv_header() + "\n" + tmp
+    
+    def get_club(self, season: str = None) -> 'ClubTable':
+        ids = [x.get_club(season) for x in self._data]
+        return ClubTable(ids)
+    
+    def get_market_value(self) -> 'MarketValueTable':
+        return MarketValueTable([value for player in self._data for value in player.get_market_value()])
+    
+    def get_transfers(self) -> 'TransferTable':
+        return TransferTable([value for player in self._data for value in player.get_transfers()])
 
-    def transfers(self) -> "List[TransferDTO]":
-        return [value for player in self._data for value in player.get_transfers()]
-
-    def transfers_csv(self) -> str:
-        tmp = "\n".join([str(x) for x in self.transfers()])
-        return TransferDTO.csv_header() + "\n" + tmp
+    def get_career_stats(self) -> 'CareerStatTable':
+        return CareerStatTable([value for player in self._data for value in player.get_careeer_stats()])
+    
+    def get_injuries(self) -> 'InjuryTable':
+        return InjuryTable([value for player in self._data for value in player.get_injuries()])
 
     def count(self) -> int:
         return len(self._data)
-
-    def stats(self) -> List[CareerStatsDTO]:
-        return [value for player in self._data for value in player.get_careeer_stats()]
-
-    def stats_csv(self) -> str:
-        tmp = "\n".join([str(x) for x in self.stats()])
-        return CareerStatsDTO.csv_header() + "\n" + tmp
-
-    def injuries(self) -> List[InjuryDTO]:
-        return [value for player in self._data for value in player.get_injuries()]
-
-    def injuries_csv(self) -> str:
-        tmp = "\n".join([str(x) for x in self.injuries()])
-        return InjuryDTO.csv_header() + "\n" + tmp
 
 
 class ClubTable:
@@ -68,23 +52,22 @@ class ClubTable:
 
     def __init__(self, ids: List[str]):
         self._data = [ClubInstance(id) for id in ids]
-        # print("table created", ids)
 
-    def get_players(self, season: str = None) -> "PlayerTable":
+    def data(self, season: str = None) -> 'List[ClubData]':
+        return [club.get_data(season) for club in self._data]
+
+    def csv(self, season: str = None) -> str:
+        tmp_data = "\n".join([str(x) for x in self.data(season)])
+        return ClubData.csv_header() + "\n" + tmp_data
+
+    def get_players(self, season: str = None) -> 'PlayerTable':
         player_ids = [
             player_id
             for club in self._data
             for player_id in club.get_data(season).players
         ]
         return PlayerTable(player_ids)
-
-    def data(self, season: str = None) -> "List[ClubData]":
-        return [club.get_data(season) for club in self._data]
-
-    def data_csv(self, season: str = None) -> str:
-        tmp_data = "\n".join([str(x) for x in self.data(season)])
-        return ClubData.csv_header() + "\n" + tmp_data
-
+    
     def count(self) -> int:
         return len(self._data)
 
@@ -96,18 +79,15 @@ class CompetitionTable:
         self._data = [CompetitionInstance(id) for id in ids]
         # print("table created", ids)
 
-    def data(self, season: str = None) -> "List[CompetitionData]":
+    def data(self, season: str = None) -> 'List[CompetitionData]':
         return [competition.get_data(season) for competition in self._data]
 
-    def data_csv(self, season: str = None) -> str:
+    def csv(self, season: str = None) -> str:
         tmp_data = "\n".join([str(x) for x in self.data(season)])
         return CompetitionData.csv_header() + "\n" + tmp_data
 
-    def get_clubs(self, season: str = None) -> "ClubTable":
-        club_ids = [
-            club_id for club in self._data for club_id in club.get_data(season).clubs
-        ]
-        return ClubTable(club_ids)
+    def get_clubs(self, season: str = None) -> 'ClubTable':
+        return ClubTable([club_id for club in self._data for club_id in club.get_data(season).clubs ])
 
     def goal_scorers(self, season: str = None):
         return [
@@ -123,3 +103,54 @@ class CompetitionTable:
 
 # class MatchTable():
 #     pass
+
+class TransferTable:
+    _data: List['TransferDTO']
+
+    def __init__(self, data: List[TransferDTO]):
+        self._data = data
+    
+    def data(self) -> List['TransferDTO']:
+        return self._data
+
+    def csv(self) -> str:
+        return "\n".join([TransferDTO.csv_header()] + [str(x) for x in self._data])
+
+
+class MarketValueTable:
+    _data: List['MarketValueDTO']
+
+    def __init__(self, data: List[MarketValueDTO]):
+        self._data = data
+    
+    def data(self) -> List['MarketValueDTO']:
+        return self._data
+
+    def csv(self) -> str:
+        return "\n".join([MarketValueDTO.csv_header()] + [str(x) for x in self._data])
+
+
+class CareerStatTable:
+    _data: List['CareerStatsDTO']
+
+    def __init__(self, data: List[CareerStatsDTO]):
+        self._data = data
+    
+    def data(self) -> List['CareerStatsDTO']:
+        return self._data
+
+    def csv(self) -> str:
+        return  "\n".join([CareerStatsDTO.csv_header()] + [str(x) for x in self._data])
+
+
+class InjuryTable:
+    _data: List['InjuryDTO']
+
+    def __init__(self, data: List[InjuryDTO]):
+        self._data = data
+    
+    def data(self) -> List['InjuryDTO']:
+        return self._data
+
+    def csv(self) -> str:
+        return "\n".join([InjuryDTO.csv_header()] + [str(x) for x in self._data])

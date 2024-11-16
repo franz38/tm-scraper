@@ -31,7 +31,7 @@ def test_get_previous_players():
 
 def test_csv():
 
-    csv = TMQuery(cache_results=True).search_club("benfica").data_csv()
+    csv = TMQuery(cache_results=True).search_club("benfica").csv()
 
     assert csv.split("\n")[0] == "name, squad_size, avg_age, foreigners, nt_players, stadium, current_tr"
     assert csv.split("\n")[1] == "SL Benfica, 26, 25.2, 19, 15, /benfica-lissabon/stadion/verein/294, +€86.42m"

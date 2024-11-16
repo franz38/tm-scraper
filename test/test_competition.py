@@ -27,7 +27,7 @@ def test_get_previous_clubs():
 
 def test_csv():
 
-    csv = TMQuery(cache_results=True).search_competition("premier league").data_csv()
+    csv = TMQuery(cache_results=True).search_competition("premier league").csv()
 
     assert csv.split("\n")[0] == "name, number_of_teams, number_of_players, foreigners, avg_mv, avg_age, mvp"
     assert csv.split("\n")[1] == "Premier League, 20 teams, 530, null, €22.16m, 26.5, /erling-haaland/profil/spieler/418560"
