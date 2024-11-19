@@ -22,7 +22,7 @@ TMQuery().search_player("luis suarez").csv()
 <br>
 
 ```python
-TMQuery().search_club("barcelona").get_players(season="2010").csv()
+TMQuery().search_club("barcelona").get_players(season="2010-11").csv()
 ```
 
 
