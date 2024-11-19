@@ -14,21 +14,26 @@ from tmquery import TMQuery
 
 TMQuery().search_player("luis suarez").csv()
 ```
-| name | height | citizenship | ... | foot | agent | joined | expires |
-|------|--------|-------------|-----|------|-------|--|--|
-| Luis Suárez | 1.82 m | Uruguay | ... | right | Relatives | Jan 1, 2024 | Dec 31, 2024 |
+
+| name        | date_of_birth     | place_of_birth | height | citizenship | position                | foot  | agent     | current_club                                | joined       | expires     | option                    | outfitter |
+|-------------|-------------------|----------------|--------|-------------|-------------------------|-------|-----------|---------------------------------------------|--------------|-------------|---------------------------|-----------|
+| Luis Suárez | Jan 24, 1987 (37) | Salto          | 1.82 m | Uruguay     | Attack - Centre-Forward | right | Relatives | /inter-miami-cf/startseite/verein/69261     | Jan 1, 2024  | Dec 31, 2024| Option for a further year | Puma      |
 
 <br>
 
 ```python
-TMQuery().search_club("barcelona").get_players().csv()
+TMQuery().search_club("barcelona").get_players("2010-11").csv()
 ```
 
-| name                  | date_of_birth     | place_of_birth  | height | citizenship       | position               | foot  | agent                                      | current_club                                | joined       | expires     | option | outfitter |
-|-----------------------|-------------------|-----------------|--------|-------------------|------------------------|-------|--------------------------------------------|---------------------------------------------|--------------|-------------|--------|-----------|
-| Marc-André ter Stegen | Apr 30, 1992 (32) | Mönchengladbach | 1.87 m | Germany           | Goalkeeper             | right | /roof/beraterfirma/berater/2295            | /fc-barcelona/startseite/verein/131         | Jul 1, 2014  | Jun 30, 2028| null   | adidas    |
-| Iñaki Peña            | Mar 2, 1999 (25)  | Alicante        | 1.84 m | Spain             | Goalkeeper             | right | /wakai-sports/beraterfirma/berater/12120   | /fc-barcelona/startseite/verein/131         | Jan 30, 2022 | Jun 30, 2026| null   | Nike      |
+
+| name                | date_of_birth     | place_of_birth           | height | citizenship | position               | foot  | agent                                      | current_club                                | joined       | expires     | option | outfitter |
+|---------------------|-------------------|--------------------------|--------|-------------|------------------------|-------|--------------------------------------------|---------------------------------------------|--------------|-------------|--------|-----------|
+| Víctor Valdés       | Jan 14, 1982 (42) | L’Hospitalet de Llobregat| 1.83 m | Spain       | Goalkeeper             | right | no agent                                   | /retired/startseite/verein/123              | Aug 17, 2017 | -           | null   | null      |
+| Rubén Miño          | Jan 18, 1989 (35) | Cornellà de Llobregat    | 1.91 m | Spain       | Goalkeeper             | right | /footfeel-ism/beraterfirma/berater/4477    | /ue-cornella/startseite/verein/16196        | Aug 3, 2023  | Jun 30, 2025| null   | null      |
+| José Manuel Pinto   | Nov 8, 1975 (49)  | El Puerto de Santa María | 1.85 m | Spain       | Goalkeeper             | right | null                                       | /retired/startseite/verein/123              | Jul 1, 2014  | -           | null   | null      |
+| Gerard Piqué        | Feb 2, 1987 (37)  | Barcelona                | 1.94 m | Spain       | Defender - Centre-Back | right | /ac-talent/beraterfirma/berater/5041       | null                                        | Jan 1, 2023  | -           | null   | Nike      |
 | ...     | ... | ...        | ... | ...            | ...             | ... | ...      | ...         | ...  | ...| ...   | ...      |
+
 
 <br>
 
