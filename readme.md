@@ -22,6 +22,20 @@ TMQuery().search_player("luis suarez").csv()
 <br>
 
 ```python
+TMQuery().search_player("morata").get_transfers().csv()
+```
+
+| player         | player_id                                    | season | date       | left             | joined    | mv       | fee         |
+|----------------|----------------------------------------------|--------|------------|------------------|-----------|----------|-------------|
+| Álvaro Morata  | /alvaro-morata/profil/spieler/128223         | 24/25  | Jul 19, 2024 | Atlético Madrid  | AC Milan  | €16.00m  | €13.00m     |
+| Álvaro Morata  | /alvaro-morata/profil/spieler/128223         | 21/22  | Jun 30, 2022 | Juventus         | Atlético Madrid | €25.00m  | End of loan |
+| Álvaro Morata  | /alvaro-morata/profil/spieler/128223         | 20/21  | Sep 22, 2020 | Atlético Madrid  | Juventus  | €36.00m  | €20.00m     |
+| ...            | ...                                          | ...    | ...        | ...              | ...       | ...      | ...         |
+
+
+<br>
+
+```python
 TMQuery().search_club("barcelona").get_players(season="2010-11").csv()
 ```
 
@@ -34,18 +48,6 @@ TMQuery().search_club("barcelona").get_players(season="2010-11").csv()
 | ...     | ... | ...        | ... | ...            | ...             | ... | ...      | ...         | ...  | ...| ...   | ...      |
 
 
-<br>
-
-```python
-TMQuery().search_player("morata").get_transfers().csv()
-```
-
-| player         | player_id                                    | season | date       | left             | joined    | mv       | fee         |
-|----------------|----------------------------------------------|--------|------------|------------------|-----------|----------|-------------|
-| Álvaro Morata  | /alvaro-morata/profil/spieler/128223         | 24/25  | Jul 19, 2024 | Atlético Madrid  | AC Milan  | €16.00m  | €13.00m     |
-| Álvaro Morata  | /alvaro-morata/profil/spieler/128223         | 21/22  | Jun 30, 2022 | Juventus         | Atlético Madrid | €25.00m  | End of loan |
-| Álvaro Morata  | /alvaro-morata/profil/spieler/128223         | 20/21  | Sep 22, 2020 | Atlético Madrid  | Juventus  | €36.00m  | €20.00m     |
-| ...            | ...                                          | ...    | ...        | ...              | ...       | ...      | ...         |
 
 
 ## License
