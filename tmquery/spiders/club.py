@@ -1,4 +1,6 @@
+from typing import List
 from tmquery.client import Client
+from tmquery.dto import MatchDTO
 from tmquery.utils import list_to_csv, remove_season, get_box
 
 
@@ -79,6 +81,42 @@ class ClubInstance:
 
         print("club scraped: " + url)
 
+
+    def get_matches(self, season: str = None, competition: str = None) -> List[MatchDTO]:
+        _id = self.id.split("/startseite/verein/")
+        url = _id[0]  + "/spielplandatum/verein/" + _id[1] + "/plus/1?saison_id=2024"
+        soup = Client().scrape(url)
+        rows = get_box(soup, "fixtures by date").find(class_="responsive-table").find("tbody").find_all("tr")
+
+        _matches: List[MatchDTO] = []
+        current_competition = ""
+        current_competition_id = ""
+        for row in rows:
+            tds = row.find_all("td")
+
+            if len(tds) == 1:
+                current_competition = tds[0].find("a").get_text()
+                current_competition_id = tds[0].find("a")["href"]
+            else:
+                _match = MatchDTO(
+                    match_day= tds[0].get_text().strip(),
+                    date= tds[1].get_text().strip(),
+                    time= tds[2].get_text().strip(),
+                    home_team= tds[4].find("a").get_text().strip(),
+                    home_team_id= tds[4].find("a")["href"].replace("spielplan", "startseite"),
+                    away_team= tds[6].find("a").get_text().strip(),
+                    away_team_id= tds[6].find("a")["href"].replace("spielplan", "startseite"),
+                    system= tds[7].get_text().strip(),
+                    coach= tds[8].get_text().strip(),
+                    coach_id= tds[8].find("a")["href"] if tds[8].find("a") else "",
+                    attendance= tds[9].get_text().strip(),
+                    result= tds[10].get_text().strip(),
+                    competition= current_competition,
+                    competition_id= current_competition_id
+                )
+                _matches.append(_match)
+        
+        return _matches
     
 
     def get_data(self, season: str = None) -> ClubData:

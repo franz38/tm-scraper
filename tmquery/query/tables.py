@@ -1,5 +1,5 @@
 from typing import List
-from tmquery.dto.injury import InjuryDTO
+from tmquery.dto import InjuryDTO, MatchDTO
 from tmquery.spiders import (
     ClubData,
     ClubInstance,
@@ -67,6 +67,9 @@ class ClubTable:
             for player_id in club.get_data(season).players
         ]
         return PlayerTable(player_ids)
+    
+    def get_matches(self, season: str = None) -> 'MatchTable':
+        return MatchTable([match for club in self._data for match in club.get_matches(season)])
     
     def count(self) -> int:
         return len(self._data)
@@ -154,3 +157,23 @@ class InjuryTable:
 
     def csv(self) -> str:
         return "\n".join([InjuryDTO.csv_header()] + [str(x) for x in self._data])
+
+
+class MatchTable:
+    _data: List['MatchDTO']
+
+    def __init__(self, data: List[MatchDTO]):
+        self._data = data
+
+    def data(self) -> List['MatchDTO']:
+        return self._data
+
+    def csv(self) -> str:
+        return "\n".join([MatchDTO.csv_header()] + [str(x) for x in self._data])
+    
+    def get_away_team(self) -> ClubTable:
+        return ClubTable([x.away_team_id for x in self._data])
+    
+    def get_home_team(self) -> ClubTable:
+        print([x.home_team_id for x in self._data])
+        return ClubTable([x.home_team_id for x in self._data])
