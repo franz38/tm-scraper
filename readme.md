@@ -48,6 +48,10 @@ TMQuery().search_club("barcelona").get_players(season="2010-11").csv()
 | ...     | ... | ...        | ... | ...            | ...             | ... | ...      | ...         | ...  | ...| ...   | ...      |
 
 
+<br>
+
+## UML
+![alt text](https://github.com/franz38/tmquery/blob/main/public/tmquery_uml.png?raw=true)
 
 
 ## License
