@@ -6,8 +6,8 @@ from tmquery.client import Client
 
 class TMQuery(metaclass=Singleton):
 
-    def __init__(self, cache_results: bool = False):
-        Client(cache_results=cache_results)
+    def __init__(self, cache_results: bool = False, cache_dir: str = "./cache/"):
+        Client(cache_results=cache_results, cache_dir=cache_dir)
     
 
     def search_club(self, query: str) -> ClubTable:

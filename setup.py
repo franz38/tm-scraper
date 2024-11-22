@@ -5,7 +5,7 @@ with open("readme.md", "r") as f:
 
 setup(
     name='tmquery',
-    version='0.0.2',
+    version='0.0.3',
     packages=find_packages(exclude=['test']),
     install_requires=[
         'requests',
