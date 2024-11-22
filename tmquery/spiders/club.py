@@ -7,7 +7,7 @@ from tmquery.utils import list_to_csv, remove_season, get_box
 class ClubData:
     def __init__(self, id:str, name: str, squad_size: int, avg_age: float, 
                  foreigners: int, nt_players: int, stadium: str, current_tr: str, 
-                 current_league: str, league_lvl: str, table_position: int, players: list[str]):
+                 current_league: str, league_lvl: str, table_position: int, players: List[str]):
         self.id = id
         self.name = name
         self.squad_size = squad_size
@@ -83,8 +83,6 @@ class ClubInstance:
         if soup.find(class_="data-header__headline-wrapper").find(class_="data-header__shirt-number"):
             soup.find(class_="data-header__headline-wrapper").find(class_="data-header__shirt-number").clear()
         self._data.name = soup.find(class_="data-header__headline-wrapper").get_text().strip()
-
-        print("club scraped: " + url)
 
     
     def get_competition_id(self, season: str = None) -> List[str]:

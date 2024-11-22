@@ -100,7 +100,6 @@ class PlayerInstance:
         self._data = self._scrape_player_data(soup, PlayerData(id=self.id))
         self._scrape_mv()
         self._scrape_transfers()
-        print("player scraped: " + url)
 
     def _scrape_player_data(
         self, soup: BeautifulSoup, player: PlayerData

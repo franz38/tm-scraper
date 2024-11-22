@@ -83,7 +83,6 @@ class CompetitionTable:
 
     def __init__(self, ids: List[str]):
         self._data = [CompetitionInstance(id) for id in ids]
-        # print("table created", ids)
 
     def data(self, season: str = None) -> 'List[CompetitionData]':
         return [competition.get_data(season) for competition in self._data]
