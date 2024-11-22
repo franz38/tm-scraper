@@ -20,7 +20,7 @@ class Client(metaclass=Singleton):
 
 
     def fetch_cache(self, url: str) -> str:
-        filename = self.cache_dir + url
+        filename = self.cache_dir + url[1:].replace("/", "__")
         data = ""
 
         if self.cache_results:
