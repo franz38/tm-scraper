@@ -29,7 +29,7 @@ def test_csv():
 
 def test_market_value():
 
-    mv = TMQuery(cache_results=True).search_player("dybala").market_value()
+    mv = TMQuery(cache_results=True).search_player("dybala").get_market_value().data()
 
     assert mv[0].player_id == "/paulo-dybala/profil/spieler/206050"
     assert mv[0].player_name == "Paulo Dybala"
@@ -41,7 +41,7 @@ def test_market_value():
 
 def test_market_value_csv():
 
-    csv = TMQuery(cache_results=True).search_player("dybala").market_value_csv()
+    csv = TMQuery(cache_results=True).search_player("dybala").get_market_value().csv()
 
     assert csv.split("\n")[0] == "player_name, player_id, mv, date, club, age"
     assert csv.split("\n")[1] == "Paulo Dybala, /paulo-dybala/profil/spieler/206050, €2.00m, Dec 23, 2011, Instituto ACC, 18"

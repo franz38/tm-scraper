@@ -4,7 +4,6 @@ import datetime
 
 def seson_2_date(season: str) -> str:
     year = int(season.split('/')[1])
-    print(year)
     return f"Oct 01, {year}"
 
 

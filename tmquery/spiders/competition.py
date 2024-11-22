@@ -57,8 +57,17 @@ class CompetitionInstance:
         url = self.id + ("?saison_id=" + season if season else "")
         soup = Client().scrape(url)
 
-        rows = get_box(soup, "clubs").find("tbody").find_all("tr")
-        clubs_id = [row.find_all("td")[1].find("a")["href"] for row  in rows]
+        club_box = get_box(soup, "clubs")
+
+        if club_box:
+            rows = club_box.find("tbody").find_all("tr")
+            clubs_id = [row.find_all("td")[1].find("a")["href"] for row  in rows]
+        else:
+            details_url = url.replace("startseite", "teilnehmer")
+            soup = Client().scrape(details_url)
+
+            rows = get_box(soup, "teams").find("tbody").find_all("tr")
+            clubs_id = [row.find_all("td")[1].find("a")["href"] for row  in rows]
 
         name = soup.find(class_="data-header__headline-wrapper").get_text().strip()
 

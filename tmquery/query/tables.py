@@ -71,6 +71,9 @@ class ClubTable:
     def get_matches(self, season: str = None) -> 'MatchTable':
         return MatchTable([match for club in self._data for match in club.get_matches(season)])
     
+    def get_competitions(self, season: str = None) -> 'CompetitionTable':
+        return CompetitionTable([id for club in self._data for id in club.get_competition_id(season)])
+    
     def count(self) -> int:
         return len(self._data)
 
@@ -175,5 +178,4 @@ class MatchTable:
         return ClubTable([x.away_team_id for x in self._data])
     
     def get_home_team(self) -> ClubTable:
-        print([x.home_team_id for x in self._data])
         return ClubTable([x.home_team_id for x in self._data])

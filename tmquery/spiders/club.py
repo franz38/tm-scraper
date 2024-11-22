@@ -60,18 +60,23 @@ class ClubInstance:
         name = soup.find(class_="data-header__headline-wrapper").get_text().strip()
             
         info = soup.find_all(class_="data-header__content")
+
+        if len(info) == 9:
+            table_position = int(info[1].find("a").get_text().strip())
+        else:
+            table_position = None
         
         self._data = ClubData(id=_id,
                               name= name, 
                               current_league= soup.find(class_="data-header__club").find("a").get_text().strip(),
                               league_lvl= info[0].find("a")["href"],
-                              table_position= int(info[1].find("a").get_text().strip()),
-                              squad_size= int(info[3].get_text().strip()), 
-                              avg_age=float(info[4].get_text().strip()),
-                              foreigners=int(info[5].find("a").get_text().strip()),
-                              nt_players=int(info[6].find("a").get_text().strip()),
-                              stadium=info[7].find("a")["href"],
-                              current_tr=info[8].get_text().strip(),
+                              table_position= table_position,
+                              squad_size= int(info[-6].get_text().strip()), 
+                              avg_age=float(info[-5].get_text().strip()),
+                              foreigners=int(info[-4].find("a").get_text().strip()),
+                              nt_players=int(info[-3].find("a").get_text().strip()),
+                              stadium=info[-2].find("a")["href"],
+                              current_tr=info[-1].get_text().strip(),
                               players=players
                             )
         
@@ -80,6 +85,11 @@ class ClubInstance:
         self._data.name = soup.find(class_="data-header__headline-wrapper").get_text().strip()
 
         print("club scraped: " + url)
+
+    
+    def get_competition_id(self, season: str = None) -> List[str]:
+        matches = self.get_matches(season=season)
+        return list(set([x.competition_id for x in matches]))
 
 
     def get_matches(self, season: str = None, competition: str = None) -> List[MatchDTO]:
